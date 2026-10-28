@@ -12,6 +12,22 @@
 ---
 
 ## What is this?
+---
+
+## New here? Start here
+
+| I want to... | Go to |
+|---|---|
+| **Set it up** | [Quick start](#quick-start) below - two commands, one on the server and one on your PC. |
+| **Understand how it works** | [`docs/how-it-works.md`](docs/how-it-works.md) - the design, the crypto, and why each piece is there. |
+| **Point my apps at it** | [Per-application setup](#3-point-an-app-at-it) - Firefox, Steam, Chrome, VS Code, git, curl. |
+| **Fix something that is broken** | [`docs/troubleshooting.md`](docs/troubleshooting.md) - the common failure modes. |
+| **Understand the security trade-offs** | [`docs/assessment.md`](docs/assessment.md) - what an inspecting proxy can and cannot see, written for the admins who have to defend the network. |
+
+---
+
+## What is this?
+
 
 VanChuz is a **personal proxy** you run on your own machine, pointed at a server
 you own. It gives you a local `SOCKS5`/`HTTP` endpoint that individual
