@@ -1,0 +1,43 @@
+# ---- Secrets and credentials - NEVER COMMIT -------------------------------
+*.key
+*.pem
+*.pfx
+*.p12
+id_rsa*
+id_ed25519*
+creds.txt
+secrets.txt
+*.env
+.env.*
+config.json
+config-corp.json
+*.local.json
+
+# ---- Private keys and generated material ----------------------------------
+private.key
+public.key
+client/bin/
+client/logs/
+logs/
+*.exe
+*.zip
+*.tar.gz
+
+# ---- ACME / certificate state ----------------------------------------------
+lego/
+certs/
+*.crt
+
+# ---- Editor / OS noise ----------------------------------------------------
+.vscode/
+.idea/
+.vs/
+*.swp
+*~
+Thumbs.db
+desktop.ini
+.DS_Store
+*.lnk
+
+# ---- Logs -----------------------------------------------------------------
+*.log

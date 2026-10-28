@@ -1,0 +1,58 @@
+name: Validate
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Validate scripts and configs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check shell script syntax
+        run: |
+          set -e
+          for f in $(find . -name '*.sh' -not -path './.git/*'); do
+            echo "checking $f"
+            bash -n "$f"
+          done
+
+      - name: Check PowerShell syntax
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Get-ChildItem -Recurse -Include *.ps1 | ForEach-Object {
+            Write-Host "checking $($_.FullName)"
+            $errors = $null
+            [void][System.Management.Automation.Language.Parser]::ParseFile(
+                $_.FullName, [ref]$null, [ref]$errors)
+            if ($errors) {
+              $errors | ForEach-Object { Write-Host "  $($_.Message) (line $($_.Extent.StartLineNumber))" }
+              throw "Syntax errors in $($_.FullName)"
+            }
+          }
+
+      - name: Validate server config template
+        run: |
+          set -e
+          # The installer renders the real config from a heredoc; check the
+          # template in server/config.template.json is valid JSON.
+          python3 -m json.tool server/config.template.json > /dev/null
+
+      - name: Ensure no secrets are committed
+        run: |
+          set -e
+          echo "Checking for committed secrets..."
+          if git ls-files | grep -Ei '(^|/)(private\.key|public\.key|creds\.txt|config\.json)$'; then
+            echo "ERROR: a credential file is tracked in git."
+            exit 1
+          fi
+          if grep -rIl --exclude-dir=.git -E 'BEGIN (RSA |OPENSSH |EC )?PRIVATE KEY' . ; then
+            echo "ERROR: a private key is present in the repository."
+            exit 1
+          fi
+          echo "No secrets found."
